@@ -1,85 +1,10 @@
-const toast = document.querySelector('#toast');
-let toastTimer;
-function showToast(message){ clearTimeout(toastTimer); toast.textContent=message; toast.classList.add('show'); toastTimer=setTimeout(()=>toast.classList.remove('show'),2600); }
-
-document.querySelector('#refreshButton').addEventListener('click',()=>{
-  const now=new Date();
-  document.querySelector('#lastUpdated').textContent=now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  showToast('Sensor readings refreshed.');
-});
-document.querySelector('#testAlertButton').addEventListener('click',()=>showToast('Test alert queued. No public SMS was sent.'));
-document.querySelector('#protocolButton').addEventListener('click',()=>showToast('Watch protocol: verify readings, notify operators, and prepare local response teams.'));
-document.querySelector('#settingsButton').addEventListener('click',()=>showToast('Settings panel is ready for backend integration.'));
-
-document.querySelectorAll('.segmented button').forEach(button=>button.addEventListener('click',()=>{
-  document.querySelectorAll('.segmented button').forEach(item=>item.classList.remove('selected'));
-  button.classList.add('selected');
-  showToast(`${button.dataset.period} data range selected.`);
-}));
-
-const menuButton=document.querySelector('#menuButton');
-const sidebar=document.querySelector('.sidebar');
-const navScrim=document.querySelector('#navScrim');
-const collapseButton=document.querySelector('#collapseButton');
-
-function setDesktopCollapsed(collapsed){
-  document.body.classList.toggle('nav-collapsed',collapsed);
-  collapseButton.setAttribute('aria-expanded',String(!collapsed));
-  collapseButton.setAttribute('aria-label',collapsed?'Expand navigation':'Collapse navigation');
-  collapseButton.title=collapsed?'Expand navigation':'Collapse navigation';
-  try{localStorage.setItem('slide-nav-collapsed',String(collapsed));}catch(error){}
-}
-try{setDesktopCollapsed(localStorage.getItem('slide-nav-collapsed')==='true');}catch(error){setDesktopCollapsed(false);}
-collapseButton.addEventListener('click',()=>setDesktopCollapsed(!document.body.classList.contains('nav-collapsed')));
-
-function setMobileMenu(open){
-  sidebar.classList.toggle('open',open);
-  navScrim.classList.toggle('show',open);
-  document.body.classList.toggle('nav-open',open);
-  menuButton.setAttribute('aria-expanded',String(open));
-  menuButton.setAttribute('aria-label',open?'Close navigation':'Open navigation');
-  if(open)sidebar.querySelector('.nav-item').focus();
-}
-menuButton.addEventListener('click',()=>{
-  setMobileMenu(!sidebar.classList.contains('open'));
-});
-navScrim.addEventListener('click',()=>setMobileMenu(false));
-sidebar.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(window.innerWidth<=900)setMobileMenu(false);}));
-document.addEventListener('click',event=>{
-  if(window.innerWidth<=900 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && event.target!==menuButton){
-    setMobileMenu(false);
-  }
-});
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sidebar.classList.contains('open')){setMobileMenu(false);menuButton.focus();}});
-window.addEventListener('resize',()=>{if(window.innerWidth>900&&sidebar.classList.contains('open'))setMobileMenu(false);});
-
-const networkStatus=document.querySelector('#networkStatus');
-const networkDot=document.querySelector('#networkDot');
-function updateNetworkStatus(){
-  const online=navigator.onLine;
-  networkStatus.textContent=online?'Online':'Offline mode';
-  networkDot.classList.toggle('offline',!online);
-}
-window.addEventListener('online',()=>{updateNetworkStatus();showToast('Connection restored.');});
-window.addEventListener('offline',()=>{updateNetworkStatus();showToast('Offline mode: cached dashboard remains available.');});
-updateNetworkStatus();
-
-let installPrompt;
-const installButton=document.querySelector('#installButton');
-window.addEventListener('beforeinstallprompt',event=>{
-  event.preventDefault();
-  installPrompt=event;
-  installButton.hidden=false;
-});
-installButton.addEventListener('click',async()=>{
-  if(!installPrompt)return;
-  installPrompt.prompt();
-  await installPrompt.userChoice;
-  installPrompt=null;
-  installButton.hidden=true;
-});
-window.addEventListener('appinstalled',()=>{installButton.hidden=true;showToast('S.L.I.D.E. installed.');});
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>showToast('Offline support could not start.')));
-}
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const sidebar=$('#sidebar'),scrim=$('#scrim'),modal=$('#modal'),toasts=$('#toasts');let lastFocus;
+function page(name,hash=true){if(!['overview','history','sites','settings'].includes(name))name='overview';$$('[data-page]').forEach(x=>x.hidden=x.dataset.page!==name);$$('[data-view]').forEach(x=>x.toggleAttribute('aria-current',x.dataset.view===name));if(hash)history.replaceState(null,'','#'+name);closeMenu();scrollTo(0,0)}
+$$('[data-view]').forEach(x=>x.onclick=e=>{e.preventDefault();page(x.dataset.view)});addEventListener('hashchange',()=>page(location.hash.slice(1),false));page(location.hash.slice(1)||'overview',false);
+function closeMenu(){sidebar.classList.remove('open');scrim.classList.remove('show');document.body.style.overflow=''}$('#menuButton').onclick=()=>{sidebar.classList.add('open');scrim.classList.add('show');document.body.style.overflow='hidden'};scrim.onclick=closeMenu;
+function collapse(v){document.documentElement.classList.toggle('collapsed',v);localStorage.setItem('slide-collapse',v)}collapse(localStorage.getItem('slide-collapse')==='true');$('#collapseButton').onclick=()=>collapse(!document.documentElement.classList.contains('collapsed'));
+function openModal(){lastFocus=document.activeElement;modal.hidden=false;document.body.style.overflow='hidden';$('.modal-head button').focus()}function closeModal(){modal.hidden=true;document.body.style.overflow='';lastFocus?.focus()}$('#alertsButton').onclick=openModal;$$('[data-close]').forEach(x=>x.onclick=closeModal);addEventListener('keydown',e=>{if(e.key==='Escape'){modal.hidden?closeMenu():closeModal()}});
+function toast(title,text,type=''){const old=$$('[data-key]').find(x=>x.dataset.key===title);old?.remove();while(toasts.children.length>2)toasts.firstElementChild.remove();const n=document.createElement('article');n.className=type;n.dataset.key=title;const c=document.createElement('div'),h=document.createElement('strong'),p=document.createElement('small'),b=document.createElement('button');h.textContent=title;p.textContent=text;b.textContent='×';b.ariaLabel='Dismiss';b.onclick=()=>n.remove();c.append(h,p);n.append(c,b);toasts.append(n);setTimeout(()=>n.remove(),6500)}
+$$('[data-note]').forEach(x=>x.onclick=()=>toast('Prototype action',x.dataset.note));$('#testToast').onclick=()=>toast('Soil moisture watch','Station 04 reached 70%. Demo only—no SMS was sent.','watch');$$('.periods button').forEach(x=>x.onclick=()=>{$$('.periods button').forEach(y=>y.classList.remove('active'));x.classList.add('active');toast('Chart updated',x.textContent+' sample range selected.')});
+function network(){const on=navigator.onLine;$('#netStatus').textContent=on?'Online':'Offline mode';$('#netDot').classList.toggle('off',!on)}addEventListener('online',()=>{network();toast('Connection restored','Dashboard syncing can resume.')});addEventListener('offline',()=>{network();toast('Offline mode','Cached dashboard remains available.','watch')});network();if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));

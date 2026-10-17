@@ -16,7 +16,7 @@
     {"src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
   ],
   "shortcuts": [
-    {"name": "Current sensors", "short_name": "Sensors", "url": "./#sensors"},
-    {"name": "Alert log", "short_name": "Alerts", "url": "./#alerts"}
+    {"name": "Overview", "short_name": "Overview", "url": "./#overview"},
+    {"name": "Reading history", "short_name": "History", "url": "./#history"}
   ]
 }
