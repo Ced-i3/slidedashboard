@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b3d2e" />
+  <meta name="color-scheme" content="light" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="S.L.I.D.E." />
   <title>S.L.I.D.E. Monitoring Dashboard</title>
   <meta name="description" content="Responsive monitoring dashboard template for the S.L.I.D.E. landslide indication and detection system." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -45,6 +50,7 @@
       </div>
       <div class="header-actions">
         <div class="updated"><span>Last update</span><strong id="lastUpdated">10:42:18 AM</strong></div>
+        <button class="install-button" type="button" id="installButton" hidden>Install app</button>
         <button class="icon-button" type="button" id="refreshButton" aria-label="Refresh readings">↻</button>
         <button class="primary-button" type="button" id="testAlertButton">Test alert</button>
       </div>
@@ -139,7 +145,7 @@
         </div>
       </article>
     </section>
-    <footer><span>S.L.I.D.E. indicates risk conditions; it does not predict landslides.</span><span>Prototype dashboard · v1.0</span></footer>
+    <footer><span>S.L.I.D.E. indicates risk conditions; it does not predict landslides.</span><span><i class="network-dot" id="networkDot"></i><span id="networkStatus">Online</span> · PWA prototype v1.1</span></footer>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

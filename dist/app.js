@@ -44,11 +44,42 @@ menuButton.addEventListener('click',()=>{
   setMobileMenu(!sidebar.classList.contains('open'));
 });
 navScrim.addEventListener('click',()=>setMobileMenu(false));
-sidebar.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(window.innerWidth<=760)setMobileMenu(false);}));
+sidebar.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{if(window.innerWidth<=900)setMobileMenu(false);}));
 document.addEventListener('click',event=>{
-  if(window.innerWidth<=760 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && event.target!==menuButton){
+  if(window.innerWidth<=900 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && event.target!==menuButton){
     setMobileMenu(false);
   }
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sidebar.classList.contains('open')){setMobileMenu(false);menuButton.focus();}});
-window.addEventListener('resize',()=>{if(window.innerWidth>760&&sidebar.classList.contains('open'))setMobileMenu(false);});
+window.addEventListener('resize',()=>{if(window.innerWidth>900&&sidebar.classList.contains('open'))setMobileMenu(false);});
+
+const networkStatus=document.querySelector('#networkStatus');
+const networkDot=document.querySelector('#networkDot');
+function updateNetworkStatus(){
+  const online=navigator.onLine;
+  networkStatus.textContent=online?'Online':'Offline mode';
+  networkDot.classList.toggle('offline',!online);
+}
+window.addEventListener('online',()=>{updateNetworkStatus();showToast('Connection restored.');});
+window.addEventListener('offline',()=>{updateNetworkStatus();showToast('Offline mode: cached dashboard remains available.');});
+updateNetworkStatus();
+
+let installPrompt;
+const installButton=document.querySelector('#installButton');
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  installPrompt=event;
+  installButton.hidden=false;
+});
+installButton.addEventListener('click',async()=>{
+  if(!installPrompt)return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt=null;
+  installButton.hidden=true;
+});
+window.addEventListener('appinstalled',()=>{installButton.hidden=true;showToast('S.L.I.D.E. installed.');});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>showToast('Offline support could not start.')));
+}

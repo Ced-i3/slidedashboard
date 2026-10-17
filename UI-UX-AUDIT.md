@@ -114,11 +114,16 @@ The dashboard is a strong presentation-ready prototype with a clear operational 
 - HTML audit confirms unique IDs, valid local asset references, landmark presence, and image alternative text.
 - CSS includes responsive and reduced-motion rules.
 - No framework or chart dependency is required.
+- A web app manifest, 192px/512px icons, maskable icon, standalone display mode, install prompt, and service worker are configured.
+- The application shell is cached for offline reopening, and the footer reports browser connectivity state.
+- Critical fonts and interface assets are local, so the shell does not depend on a third-party CDN.
+- Safe-area insets accommodate notches and home indicators in installed mode.
+- Layout rules explicitly cover compact phones from 320px, larger phones, tablets, laptops, desktop displays, and short landscape screens.
 
 ### Caveats
 
-- Google Fonts are loaded remotely. Offline or degraded field deployments will fall back to system fonts unless the font files are self-hosted.
-- No Content Security Policy, Subresource Integrity, service worker, offline cache, or asset fingerprinting is configured.
+- Offline mode preserves the cached interface and sample readings; it does not create live sensor connectivity or queue alert actions.
+- No Content Security Policy or asset fingerprinting is configured.
 - There are no unit, integration, end-to-end, visual-regression, or automated accessibility tests.
 - No telemetry, error reporting, performance budgets, or browser-support policy is defined.
 - Static sample data is embedded in the HTML. Production data requires schema validation, loading states, empty states, partial-failure handling, and retry behavior.
@@ -132,4 +137,4 @@ The dashboard is a strong presentation-ready prototype with a clear operational 
 4. Implement real alert confirmation, permissions, delivery tracking, and audit history.
 5. Replace the illustrative site panel with a real map and clearly sourced hazard layers.
 6. Add automated functional, responsive, accessibility, and visual-regression tests.
-7. Self-host critical assets and add offline/degraded-network behavior for field use.
+7. Extend offline behavior with timestamped last-known readings, queued safe actions, update prompts, and cache-version tests.
