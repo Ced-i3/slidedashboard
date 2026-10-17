@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>S.L.I.D.E. Monitoring Dashboard</title>
+  <meta name="description" content="Responsive monitoring dashboard template for the S.L.I.D.E. landslide indication and detection system." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="sidebar" id="primarySidebar" aria-label="Primary navigation">
+    <a class="brand" href="#" aria-label="S.L.I.D.E. home">
+      <img src="assets/slide-logo.png" alt="S.L.I.D.E. logo" />
+      <span class="brand-copy"><strong>S.L.I.D.E.</strong><small>Field Monitor</small></span>
+    </a>
+    <button class="collapse-button" type="button" id="collapseButton" aria-label="Collapse navigation" aria-controls="primarySidebar" aria-expanded="true" title="Collapse navigation">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 7-5 5 5 5"/></svg>
+    </button>
+    <nav>
+      <a class="nav-item active" href="#overview" aria-current="page" data-label="Overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z"/></svg><span>Overview</span></a>
+      <a class="nav-item" href="#sensors" data-label="Sensors"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8m0-12.8-2.8 2.8m-7.2 7.2-2.8 2.8"/><circle cx="12" cy="12" r="3"/></svg><span>Sensors</span><b>6</b></a>
+      <a class="nav-item" href="#alerts" data-label="Alerts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></svg><span>Alerts</span><b class="warn">2</b></a>
+      <a class="nav-item" href="#history" data-label="History"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5m4-1v5l3 2"/></svg><span>History</span></a>
+      <a class="nav-item" href="#sites" data-label="Monitoring sites"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Monitoring sites</span></a>
+    </nav>
+    <div class="station-mini">
+      <span class="eyebrow">Station</span>
+      <strong>ILG–BRGY. 04</strong>
+      <span class="connection"><i></i> Online · 32 sec ago</span>
+    </div>
+    <button class="sidebar-action" type="button" id="settingsButton" data-label="System settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M19 13.5v-3l-2-.7-.5-1.2.9-2-2.1-2.1-2 .9-1.2-.5-.7-2h-3l-.7 2-1.2.5-2-.9-2.1 2.1.9 2-.5 1.2-2 .7v3l2 .7.5 1.2-.9 2 2.1 2.1 2-.9 1.2.5.7 2h3l.7-2 1.2-.5 2 .9 2.1-2.1-.9-2 .5-1.2 2-.7Z"/></svg><span>System settings</span></button>
+  </aside>
+  <button class="nav-scrim" id="navScrim" aria-label="Close navigation" tabindex="-1"></button>
+
+  <main id="overview">
+    <header class="topbar">
+      <button class="menu-button" id="menuButton" aria-label="Open navigation" aria-controls="primarySidebar" aria-expanded="false">Menu</button>
+      <div>
+        <p class="location">Iligan City · Brgy. Dalipuga · Station 04</p>
+        <h1>Slope condition overview</h1>
+      </div>
+      <div class="header-actions">
+        <div class="updated"><span>Last update</span><strong id="lastUpdated">10:42:18 AM</strong></div>
+        <button class="icon-button" type="button" id="refreshButton" aria-label="Refresh readings">↻</button>
+        <button class="primary-button" type="button" id="testAlertButton">Test alert</button>
+      </div>
+    </header>
+
+    <section class="status-banner" aria-labelledby="risk-title">
+      <div class="risk-block">
+        <span class="status-mark" aria-hidden="true"></span>
+        <div><p>Current risk level</p><h2 id="risk-title">Elevated</h2></div>
+      </div>
+      <p class="risk-copy">Soil moisture has crossed the watch threshold. No significant ground movement detected.</p>
+      <div class="risk-actions">
+        <button class="text-button" type="button" id="protocolButton">View response protocol</button>
+        <span class="level-scale" aria-label="Risk level 2 of 4"><i></i><i class="on"></i><i></i><i></i></span>
+      </div>
+    </section>
+
+    <section class="metrics" id="sensors" aria-label="Current sensor readings">
+      <article class="metric critical">
+        <div class="metric-head"><span>Soil moisture</span><em>Watch</em></div>
+        <div class="reading"><strong>78</strong><span>%</span></div>
+        <div class="meter"><i style="width:78%"></i><b style="left:70%"></b></div>
+        <p><span>Threshold 70%</span><span>↑ 6% / 1h</span></p>
+      </article>
+      <article class="metric">
+        <div class="metric-head"><span>Ground tilt</span><em class="normal">Stable</em></div>
+        <div class="reading"><strong>1.8</strong><span>°</span></div>
+        <div class="sparkline green" aria-label="Stable ground tilt trend"><svg viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 24 L25 22 L48 25 L73 20 L98 22 L122 19 L148 21 L174 18 L200 20"/></svg></div>
+        <p><span>Baseline 1.6°</span><span>+0.2° / 24h</span></p>
+      </article>
+      <article class="metric">
+        <div class="metric-head"><span>Rain intensity</span><em class="normal">Light</em></div>
+        <div class="reading"><strong>4.2</strong><span>mm/h</span></div>
+        <div class="sparkline blue" aria-label="Rain intensity trend"><svg viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 30 L22 28 L40 30 L58 21 L77 25 L96 14 L116 18 L136 9 L156 14 L177 7 L200 12"/></svg></div>
+        <p><span>24h total 36.8 mm</span><span>Rain ongoing</span></p>
+      </article>
+      <article class="metric">
+        <div class="metric-head"><span>Temperature</span><em class="normal">Normal</em></div>
+        <div class="reading"><strong>27.4</strong><span>°C</span></div>
+        <div class="temp-row"><span>Humidity</span><strong>84%</strong></div>
+        <p><span>DHT11 sensor</span><span>Signal good</span></p>
+      </article>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="panel trend-panel" id="history">
+        <div class="panel-heading">
+          <div><h2>Conditions over time</h2><p>Readings from the past 24 hours</p></div>
+          <div class="segmented" role="group" aria-label="Chart period">
+            <button class="selected" data-period="24H">24H</button><button data-period="7D">7D</button><button data-period="30D">30D</button>
+          </div>
+        </div>
+        <div class="legend"><span><i class="soil"></i>Soil moisture</span><span><i class="rain"></i>Rainfall</span><span><i class="tilt"></i>Tilt</span></div>
+        <div class="chart" role="img" aria-label="Line chart showing soil moisture rising after rainfall while ground tilt remains stable">
+          <span class="y y1">100</span><span class="y y2">75</span><span class="y y3">50</span><span class="y y4">25</span>
+          <svg viewBox="0 0 720 250" preserveAspectRatio="none">
+            <g class="grid"><line x1="0" y1="20" x2="720" y2="20"/><line x1="0" y1="80" x2="720" y2="80"/><line x1="0" y1="140" x2="720" y2="140"/><line x1="0" y1="200" x2="720" y2="200"/></g>
+            <path class="area" d="M0 180 C95 175 130 158 205 162 S330 126 405 134 S520 86 590 82 S680 62 720 55 L720 220 L0 220 Z"/>
+            <path class="soil-line" d="M0 180 C95 175 130 158 205 162 S330 126 405 134 S520 86 590 82 S680 62 720 55"/>
+            <path class="rain-line" d="M0 218 L75 215 L120 190 L155 212 L215 204 L260 164 L300 206 L355 192 L405 116 L445 197 L505 174 L548 104 L590 164 L630 95 L672 147 L720 126"/>
+            <path class="tilt-line" d="M0 203 C130 201 210 205 330 201 S530 204 720 199"/>
+          </svg>
+          <div class="x-axis"><span>10 AM</span><span>2 PM</span><span>6 PM</span><span>10 PM</span><span>2 AM</span><span>6 AM</span><span>Now</span></div>
+        </div>
+      </section>
+
+      <aside class="panel alert-panel" id="alerts">
+        <div class="panel-heading"><div><h2>Alert log</h2><p>Today · 2 events</p></div><button class="text-button">View all</button></div>
+        <div class="alert-list">
+          <article class="alert-item warning"><time>10:18 AM</time><div><strong>Moisture threshold crossed</strong><p>Reading reached 74% and remains above the 70% watch level.</p><span>SMS sent to 4 recipients</span></div></article>
+          <article class="alert-item"><time>6:42 AM</time><div><strong>Heavy rainfall recorded</strong><p>Rain intensity reached 18.5 mm/h for 12 minutes.</p><span>Event logged</span></div></article>
+          <article class="alert-item quiet"><time>Yesterday</time><div><strong>Daily system check passed</strong><p>All six sensors responded within expected range.</p></div></article>
+        </div>
+      </aside>
+    </div>
+
+    <section class="lower-grid" id="sites">
+      <article class="site-panel">
+        <div class="map-visual" aria-label="Diagram of monitoring station location">
+          <div class="contour c1"></div><div class="contour c2"></div><div class="contour c3"></div>
+          <span class="pin"><i></i></span><span class="map-label">Station 04</span>
+        </div>
+        <div class="site-copy"><span class="eyebrow">Monitoring site</span><h2>Dalipuga hillside</h2><p>8.2271° N, 124.2452° E<br>Elevation 112 m</p><a href="#">Open site details →</a></div>
+      </article>
+      <article class="system-panel">
+        <div class="panel-heading"><div><h2>System health</h2><p>Power, storage, and communications</p></div><strong class="online-label">All systems online</strong></div>
+        <div class="health-items">
+          <div><span>Battery</span><strong>86%</strong><small>Solar charging</small></div>
+          <div><span>GSM signal</span><strong>−71 dBm</strong><small>Good</small></div>
+          <div><span>Wi-Fi</span><strong>Connected</strong><small>ThingSpeak synced</small></div>
+          <div><span>SD storage</span><strong>62%</strong><small>3.1 GB available</small></div>
+        </div>
+      </article>
+    </section>
+    <footer><span>S.L.I.D.E. indicates risk conditions; it does not predict landslides.</span><span>Prototype dashboard · v1.0</span></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
