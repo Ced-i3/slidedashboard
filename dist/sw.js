@@ -1,4 +1,4 @@
-const CACHE_NAME='slide-shell-v1.2.0';
+const CACHE_NAME='slide-shell-v1.2.1';
 const APP_SHELL=['./','./index.html','./styles.css','./app.js','./manifest.webmanifest','./assets/slide-logo.png','./assets/icon-192.png','./assets/icon-512.png','./assets/icon-maskable-512.png'];
 
 self.addEventListener('install',event=>{
@@ -15,5 +15,17 @@ self.addEventListener('fetch',event=>{
     event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put('./index.html',copy));return response;}).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{if(response.ok&&new URL(event.request.url).origin===self.location.origin){const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put(event.request,copy));}return response;})));
+  if(new URL(event.request.url).origin!==self.location.origin)return;
+  event.respondWith((async()=>{
+    const cache=await caches.open(CACHE_NAME);
+    try{
+      const response=await fetch(event.request,{cache:'no-cache'});
+      if(response.ok)await cache.put(event.request,response.clone());
+      return response;
+    }catch(error){
+      const cached=await cache.match(event.request);
+      if(cached)return cached;
+      throw error;
+    }
+  })());
 });
