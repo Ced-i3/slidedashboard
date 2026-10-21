@@ -35,6 +35,8 @@ Device authentication or validation failures receive `401` or `400`; oversized J
 
 Maintenance command kinds are `calibrate_mpu`, `set_test_mode`, `record_adc_endpoint`, `set_tilt_thresholds`, and `set_adc_settings`. Commands target the latest boot, expire after 120 seconds, and are accepted sequentially. Acknowledgment is server-side and does not change the firmware's active/resolved event state.
 
+The dashboard's automatic browser alerts use raw `pitch_deg`, `roll_deg`, `soil_adc_raw`, and `rain_adc_raw` from `GET /dashboard`, subject to telemetry freshness and per-sensor ONLINE health. They do not require `baseline_calibrated` or `test_mode`, and saving browser thresholds sends no maintenance command. Browser settings are per station/browser; browser event history and acknowledgments remain local to the current page session. Firmware commands and `/alerts` remain available to existing API clients. These two event sources are labeled separately in the website.
+
 ## Orange Pi integration
 
 1. Install Node.js 22.13 or later and place this service alongside the existing website runtime after reviewing that host's current service and database.
